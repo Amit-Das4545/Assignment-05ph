@@ -28,7 +28,7 @@
                 class="max-w-7xl mx-auto flex items-center justify-between p-4">
                 <div class="flex items-center gap-2 font-bold text-lg">
                     <img src="assets/logo.png" alt="Logo" class="w-8 h-8 " />
-                    <span class="text-[#006747] font-bold">Emergency
+                    <span class="text-[#006747] font-bold">Emergency<br />
                         Service</span>
                 </div>
                 <div class="flex items-center gap-4">
@@ -305,5 +305,85 @@
             <!-- Cards end -->
             <!-- 9 card end -->
 
-        </body>
-    </html>
+            <!-- History Section -->
+            <div class="bg-white rounded-2xl shadow p-4 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-semibold"><i
+                            class="fa-regular fa-clock"></i> Call History</h2>
+                    <button id="clearHistory"
+                        class="  bg-green-600 text-white rounded-3xl w-[100px] p-2">Clear</button>
+                    <!-- <span class="text-white">0</span> <span class="text-white bg-green-800">Clear</span> -->
+                </div>
+                <ul id="historyList"
+                    class="flex flex-col gap-2 text-sm text-gray-700"></ul>
+            </div>
+
+            <!-- History end -->
+        </main>
+
+        <script >
+
+  let heartCount = 0;
+        let coinCount = 100;
+        let copyCount = 0;
+
+        const heartEl = document.querySelector('#heartCount span');
+        const coinEl = document.querySelector('#coinCount span');
+        const copyEl = document.querySelector('#copyCount span');
+        const historyList = document.querySelector('#historyList');
+
+        function addHeartListeners() {
+            document.querySelectorAll('.heartBtn').forEach(btn => {
+                btn.onclick = () => {
+                    heartCount++;
+                    heartEl.textContent = heartCount;
+                }
+            });
+        }
+ function addCopyListeners() {
+            document.querySelectorAll('.copyBtn').forEach(btn => {
+                btn.onclick = (e) => {
+                    const card = e.target.closest('.bg-white');
+                    const number = card.querySelector('p.text-xl').textContent;
+                    navigator.clipboard.writeText(number).then(() => {
+                        copyCount++;
+                        copyEl.textContent = copyCount;
+                        alert('Number copied: ' + number);
+                    });
+                }
+            });
+        }
+ function addCallListeners() {
+            document.querySelectorAll('.callBtn').forEach(btn => {
+                btn.onclick = (e) => {
+                    const card = e.target.closest('.bg-white');
+                    const name = card.querySelector('h2').textContent;
+                    const number = card.querySelector('p.text-xl').textContent;
+                    if (coinCount < 20) {
+                        alert('Not enough coins to make a call.');
+                        return;
+                    }
+                    coinCount -= 20;
+                    coinEl.textContent = coinCount;
+                    alert(`Calling ${name} at ${number}`);
+                    const time = new Date().toLocaleTimeString();
+                    const li = document.createElement('li');
+                    li.textContent = `${name} - ${number} (${time})`;
+                    historyList.prepend(li);
+                }
+            });
+        }
+
+        addHeartListeners();
+        addCopyListeners();
+        addCallListeners();
+
+        document.getElementById('clearHistory').addEventListener('click', () => {
+            historyList.innerHTML = '';
+        });
+
+    </script>
+    <script src="index.js"></script>
+
+    </body>
+</html>
